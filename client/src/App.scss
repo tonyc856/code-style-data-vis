@@ -1,0 +1,38 @@
+.App {
+
+  .App-header, .App-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    margin: 25px;
+  }
+
+}
+
+.chart-container {
+  height: 400px;
+  width: 100%;
+}
+
+.analysis-details {
+  font-size: 16px;
+}
+
+.search-bar-container {
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  width: 400px;
+
+  .input {
+    margin-left: 13px;
+    flex: 1;
+  }
+
+  .icon-button {
+    padding: 10px;
+  }
+}
