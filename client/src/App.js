@@ -39,7 +39,7 @@ export default class App extends Component {
 
     try {
       if (options.params.fullName) {
-        Axios.get('http://localhost:3001/api/get_repository_analysis', options).then(response => {
+        Axios.get('api/get_repository_analysis', options).then(response => {
           //console.log(response);
           const data = response.data.data;
           if (data) {
