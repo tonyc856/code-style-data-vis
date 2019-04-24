@@ -34,7 +34,11 @@ mongoose.connect(
 let connection = mongoose.connection;
 
 connection.once("open", function() { 
-  console.log("connected to the database")
+  console.log("connected to the database");
+  /* mongoose.connection.db.listCollections().toArray(function (err, names) {
+    console.log(names); // [{ name: 'dbname.myCollection' }]
+    module.exports.Collection = names;
+  }); */
 });
 
 // checks if connection with the database is successful

@@ -58,18 +58,16 @@ export default class AnalysisList extends Component {
   }
 
   getSummary = () => {
-    const summary = this.props.repositoryAnalysis.summary;
+    const summary = this.props.summary;
     const total_category_errors = summary.total_category_errors;
-    let data;
-
-    data = [
+    let data = [
       {y: total_category_errors.naming, label: "Naming: " + total_category_errors.naming}, 
       {y: total_category_errors.indentation, label: "Indentation: " + total_category_errors.indentation}, 
       {y: total_category_errors.tabs_vs_spaces, label: "Tabs vs Spaces: " + total_category_errors.tabs_vs_spaces},
       {y: total_category_errors.line_length, label: "Line Length: " + total_category_errors.line_length}, 
       {y: total_category_errors.blank_lines, label: "Blank Lines: " + total_category_errors.blank_lines}, 
       {y: total_category_errors.import, label: "Import: " + total_category_errors.import}
-    ]
+    ];
     this.setState({selected: summaryItem, data: data});
     this.props.onSelect(data, summaryItem.name);
   };

@@ -19,6 +19,7 @@ export default class App extends Component {
 
   state = {
     title: "",
+    summary: null,
     repositoryAnalysis: null,
     repositoryFullName: "",
     htmlURL: "",
@@ -40,7 +41,7 @@ export default class App extends Component {
     try {
       if (options.params.fullName) {
         Axios.get('api/get_repository_analysis', options).then(response => {
-          //console.log(response);
+          console.log(response);
           const data = response.data.data;
           if (data) {
             this.updateAnalysis(data);
@@ -54,8 +55,9 @@ export default class App extends Component {
   }
 
   updateAnalysis = data => {
-    const summary = data.repo_analysis.summary;
+    const summary = data.summary;
     this.setState({
+      summary: summary,
       repositoryAnalysis: data.repo_analysis,
       repositoryFullName: data.full_name,
       htmlURL: data.html_url,
@@ -118,7 +120,7 @@ export default class App extends Component {
               { this.state.repositoryAnalysis ? 
                 (<Grid item>
                   <Paper>
-                    <AnalysisList repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.setChartData } />
+                    <AnalysisList summary={ this.state.summary } repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.setChartData } />
                   </Paper>
                 </Grid>) : 
                 null
