@@ -34,6 +34,12 @@ const listItems = [
     parent: null
   },
   {
+    name: "Indentation",
+    property: "indentation_analysis",
+    labels: ["Files Passed", "Files Failed"],
+    parent: null
+  },
+  {
     name: "Class Naming",
     property: "classes",
     labels: ["Files Passed", "Files Failed"],
@@ -81,7 +87,6 @@ export default class AnalysisList extends Component {
 
     let keys = Object.keys(repositoryAnalysis);
     keys.forEach(key => {
-      if (key !== "summary") { // skip summary analysis
         let analysis = repositoryAnalysis[key];
         if (item.parent) {
           analysis = analysis[item.parent];
@@ -91,12 +96,12 @@ export default class AnalysisList extends Component {
         } else {  
           result2++;
         }
-      }}
+      }
     );
 
     data = [
       {y: result1, label: item.labels[0] + ": " + result1},
-      {y: result2, label: item.labels[1] + ": " + result2},
+      {y: result2, label: item.labels[1] + ": " + result2}
     ];
     this.setState({selected: item, data: data});
     this.props.onSelect(data, item.name);
