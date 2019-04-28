@@ -29,8 +29,11 @@ export default class App extends Component {
     data: null,
     queryString: "", // search string for the autocomplete search box
     selectedRepository: null, // option selected from the autocomplete search box
-    options: [] // list of repositories found
-  }
+    options: [], // list of repositories found
+    selectedAnalysis: {
+      name: "Summary"
+    }
+  };
 
   getRepositories(fullName) {
     let options = {
@@ -50,7 +53,7 @@ export default class App extends Component {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   getRepositoryAnalysis = (fullName) => {
     let options = {
@@ -70,7 +73,7 @@ export default class App extends Component {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   setAnalysis = data => {
     const summary = data.summary;
@@ -84,7 +87,64 @@ export default class App extends Component {
       analyzedFileCount: summary.analyzed_file_count,
       totalRepositoryErrors: summary.total_repo_errors
     });
-  }
+    this.onSelectAnalysis(this.state.selectedAnalysis);
+  };
+
+  onSelectAnalysis = (item) => {
+    let data;
+    if (item) {
+      if (item.name === "Summary") {
+        data = this.getSummary();
+      } else {
+        data = this.selectItem(item);
+      }
+      if (item.name !== this.state.selectedAnalysis.name) {
+        this.setState({selectedAnalysis: item});
+      }
+      this.setChartData(data, item.name);
+    }
+  };
+
+  getSummary = () => {
+    const summary = this.state.summary;
+    const totalCategoryRrrors = summary.total_category_errors;
+    let data = [
+      {y: totalCategoryRrrors.naming, label: "Naming: " + totalCategoryRrrors.naming}, 
+      {y: totalCategoryRrrors.indentation, label: "Indentation: " + totalCategoryRrrors.indentation}, 
+      {y: totalCategoryRrrors.tabs_vs_spaces, label: "Tabs vs Spaces: " + totalCategoryRrrors.tabs_vs_spaces},
+      {y: totalCategoryRrrors.line_length, label: "Line Length: " + totalCategoryRrrors.line_length}, 
+      {y: totalCategoryRrrors.blank_lines, label: "Blank Lines: " + totalCategoryRrrors.blank_lines}, 
+      {y: totalCategoryRrrors.import, label: "Import: " + totalCategoryRrrors.import}
+    ];
+    return data;
+  };
+
+  selectItem = (item) => {
+    const property = item.property;
+    const repositoryAnalysis = this.state.repositoryAnalysis;
+    let data;
+    let result1 = 0;
+    let result2 = 0;
+
+    let keys = Object.keys(repositoryAnalysis);
+    keys.forEach(key => {
+        let analysis = repositoryAnalysis[key];
+        if (item.parent) {
+          analysis = analysis[item.parent];
+        }
+        if (analysis[property].pep && analysis[property].google) {
+          result1++;
+        } else {  
+          result2++;
+        }
+      }
+    );
+    data = [
+      {y: result1, label: item.labels[0] + ": " + result1},
+      {y: result2, label: item.labels[1] + ": " + result2}
+    ];
+    return data;
+  };
 
   setChartData = (data, title) => {
     this.setState({data: data, title: title});
@@ -138,7 +198,7 @@ export default class App extends Component {
                 { this.state.repositoryAnalysis ? 
                   (<Grid item>
                     <Paper>
-                      <AnalysisList summary={ this.state.summary } repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.setChartData } />
+                      <AnalysisList summary={ this.state.summary } repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.onSelectAnalysis } />
                     </Paper>
                   </Grid>) : null
                 }
