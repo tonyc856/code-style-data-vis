@@ -22,12 +22,12 @@
 }
 
 .search-bar-container {
-  padding: 2px 4px;
   display: flex;
   align-items: center;
   width: 400px;
 
   #search-bar {
+    font-size: 18px;
     width: 100%;
   }
 
