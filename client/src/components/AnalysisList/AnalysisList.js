@@ -55,8 +55,7 @@ const listItems = [
 
 export default class AnalysisList extends Component {
   state = {
-    selected: null,
-    data: null
+    selected: null
   };
 
   componentDidMount() {
@@ -65,16 +64,16 @@ export default class AnalysisList extends Component {
 
   getSummary = () => {
     const summary = this.props.summary;
-    const total_category_errors = summary.total_category_errors;
+    const totalCategoryRrrors = summary.total_category_errors;
     let data = [
-      {y: total_category_errors.naming, label: "Naming: " + total_category_errors.naming}, 
-      {y: total_category_errors.indentation, label: "Indentation: " + total_category_errors.indentation}, 
-      {y: total_category_errors.tabs_vs_spaces, label: "Tabs vs Spaces: " + total_category_errors.tabs_vs_spaces},
-      {y: total_category_errors.line_length, label: "Line Length: " + total_category_errors.line_length}, 
-      {y: total_category_errors.blank_lines, label: "Blank Lines: " + total_category_errors.blank_lines}, 
-      {y: total_category_errors.import, label: "Import: " + total_category_errors.import}
+      {y: totalCategoryRrrors.naming, label: "Naming: " + totalCategoryRrrors.naming}, 
+      {y: totalCategoryRrrors.indentation, label: "Indentation: " + totalCategoryRrrors.indentation}, 
+      {y: totalCategoryRrrors.tabs_vs_spaces, label: "Tabs vs Spaces: " + totalCategoryRrrors.tabs_vs_spaces},
+      {y: totalCategoryRrrors.line_length, label: "Line Length: " + totalCategoryRrrors.line_length}, 
+      {y: totalCategoryRrrors.blank_lines, label: "Blank Lines: " + totalCategoryRrrors.blank_lines}, 
+      {y: totalCategoryRrrors.import, label: "Import: " + totalCategoryRrrors.import}
     ];
-    this.setState({selected: summaryItem, data: data});
+    this.setState({selected: summaryItem});
     this.props.onSelect(data, summaryItem.name);
   };
 
@@ -103,7 +102,7 @@ export default class AnalysisList extends Component {
       {y: result1, label: item.labels[0] + ": " + result1},
       {y: result2, label: item.labels[1] + ": " + result2}
     ];
-    this.setState({selected: item, data: data});
+    this.setState({selected: item});
     this.props.onSelect(data, item.name);
   };
 

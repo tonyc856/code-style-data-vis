@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { debounce } from "throttle-debounce";
+
+import Select from "react-select";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
 import { VictoryPie } from 'victory';
 
 import AnalysisList from './components/AnalysisList/AnalysisList';
 import './App.scss';
 
-
 export default class App extends Component {
-
   state = {
     title: "",
     summary: null,
@@ -28,25 +27,24 @@ export default class App extends Component {
     analyzedFileCount: 0,
     totalRepositoryErrors: 0,
     data: null,
-    queryString: "alexjc/neural-doodle"
+    queryString: "", // search string for the autocomplete search box
+    selectedRepository: null, // option selected from the autocomplete search box
+    options: [] // list of repositories found
   }
 
-  getRepositoryAnalysis = () => {
+  getRepositories(fullName) {
     let options = {
       params: {
-        fullName: this.state.queryString
+        fullName: fullName
       }
     };
-
     try {
       if (options.params.fullName) {
-        Axios.get('api/get_repository_analysis', options).then(response => {
-          console.log(response);
+        Axios.get('api/repositories', options).then(response => {
           const data = response.data.data;
           if (data) {
-            this.updateAnalysis(data);
+            this.setState({options: data});
           }
-          //console.log(this.state);
         });
       }
     } catch (error) {
@@ -54,7 +52,27 @@ export default class App extends Component {
     }
   }
 
-  updateAnalysis = data => {
+  getRepositoryAnalysis = (fullName) => {
+    let options = {
+      params: {
+        fullName: fullName
+      }
+    };
+    try {
+      if (options.params.fullName) {
+        Axios.get('api/repositories/get_analysis', options).then(response => {
+          const data = response.data.data;
+          if (data) {
+            this.setAnalysis(data);
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  setAnalysis = data => {
     const summary = data.summary;
     this.setState({
       summary: summary,
@@ -72,21 +90,20 @@ export default class App extends Component {
     this.setState({data: data, title: title});
   };
 
-  handleSearch = event => {
-    this.setState({queryString: event.target.value});
+  handleSearch = queryString => {
+    this.setState({queryString: queryString});
+    this.getRepositoriesDebounced(queryString);
   };
 
-  handleKeyPress = event => {
-    const ENTER_KEY_CODE = 13;
-    if (event.keyCode === ENTER_KEY_CODE) {
-      this.getRepositoryAnalysis();
-    }
-  }
-
-  componentDidMount = () => {
-    this.getRepositoryAnalysis();
+  onRepositorySelect = (selectedRepository) => {
+    this.setState({selectedRepository});
+    this.getRepositoryAnalysis(selectedRepository.value);
   };
-  
+
+  componentWillMount = () => {
+    this.getRepositoriesDebounced = debounce(500, this.getRepositories);
+  };
+
   render() {
     return (
       <div className="App">
@@ -102,48 +119,48 @@ export default class App extends Component {
         </AppBar>
         <div className="App-body">
           <Paper className="search-bar-container" elevation={1}>
-            <InputBase className="input" 
-              value={ this.state.queryString } 
-              placeholder="bcdasilv/code-style-mining" 
-              onChange={ this.handleSearch } 
-              onKeyDown={ this.handleKeyPress } />
-            <IconButton className="icon-button" aria-label="Search" onClick={ this.getRepositoryAnalysis } disabled={ !this.state.queryString }> 
-              <SearchIcon />
-            </IconButton>
+            <Select id="search-bar"
+              value={ this.state.selectedRepository }
+              options={ this.state.options }
+              inputValue={ this.state.queryString }
+              onInputChange={ this.handleSearch }
+              onChange={ this.onRepositorySelect } 
+              placeholder="alexjc/neural-doodle"
+              menuIsOpen={ this.state.queryString }
+            />
           </Paper>
-          { this.state.queryString ? (
-          <>  
-            <h3>Repository:{' '}
-              <a href={ this.state.htmlURL }>{ this.state.repositoryFullName }</a>
-            </h3>
-            <Grid container justify="center" spacing={40}>
-              { this.state.repositoryAnalysis ? 
-                (<Grid item>
-                  <Paper>
-                    <AnalysisList summary={ this.state.summary } repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.setChartData } />
-                  </Paper>
-                </Grid>) : 
-                null
-              }
-              <Grid item>
-                <Grid container justify="center">
-                  <h3>{ this.state.title }</h3>
+          { this.state.selectedRepository ? (
+            <>  
+              <h3>Repository:{' '}
+                <a href={ this.state.htmlURL }>{ this.state.repositoryFullName }</a>
+              </h3>
+              <Grid container justify="center" spacing={40}>
+                { this.state.repositoryAnalysis ? 
+                  (<Grid item>
+                    <Paper>
+                      <AnalysisList summary={ this.state.summary } repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.setChartData } />
+                    </Paper>
+                  </Grid>) : null
+                }
+                <Grid item>
+                  <Grid container justify="center">
+                    <h3>{ this.state.title }</h3>
+                  </Grid>
+                  <div className="chart-container">
+                    <VictoryPie 
+                      data={ this.state.data }
+                      colorScale="qualitative" />
+                  </div>
                 </Grid>
-                <div className="chart-container">
-                  <VictoryPie 
-                    data={ this.state.data }
-                    colorScale="qualitative" />
-                </div>
               </Grid>
-            </Grid>
-            <div className="analysis-details">
-              <u><b>Summary</b></u>
-              <div>Language: { this.state.language }</div>
-              <div>File Count: { this.state.fileCount } </div>
-              <div>Analyzed File Count: {this.state.analyzedFileCount } </div>  
-              <div>Total Repository Errors: {this.state.totalRepositoryErrors } </div>
-            </div>
-          </>) : null
+              <div className="analysis-details">
+                <u><b>Summary</b></u>
+                <div>Language: { this.state.language }</div>
+                <div>File Count: { this.state.fileCount } </div>
+                <div>Analyzed File Count: {this.state.analyzedFileCount } </div>  
+                <div>Total Repository Errors: {this.state.totalRepositoryErrors } </div>
+              </div>
+            </>) : null
           }    
         </div>
       </div>

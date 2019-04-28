@@ -56,8 +56,27 @@ app.use(function(req, res, next) {
   next();
 });
 
-router.get("/get_repository_analysis", (req, res) => {
-  Data.findOne({full_name: req.query.fullName}, function (err, result) {
+router.get("/repositories", (req, res) => {
+  const fullName = req.query.fullName;
+  if (fullName) {
+    Data.find({full_name: {$regex: fullName, $options: "$i"}}, function (err, result) {
+      let data = result.map(repository => {
+        let rObj = {};
+        rObj['label'] = repository.full_name;
+        rObj['value'] = repository.full_name;
+        return rObj;
+      });
+      if (err) return res.json({ success: false, error: err });
+      return res.json({ success: true, data: data });
+    }).limit(10);
+  } else {
+    return res.json({ success: true, data: [] });
+  }
+});
+
+router.get("/repositories/get_analysis", (req, res) => {
+  const fullName = req.query.fullName;
+  Data.findOne({full_name: fullName}, function (err, result) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: result });
   });
