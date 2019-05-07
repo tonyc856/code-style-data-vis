@@ -1,5 +1,4 @@
 .App {
-
   .App-header, .App-body {
     min-height: 100vh;
     display: flex;
@@ -10,6 +9,12 @@
     margin: 25px;
   }
 
+  .content-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .chart-container {
@@ -39,4 +44,8 @@
   .icon-button {
     padding: 10px;
   }
+}
+
+#drawer-menu {
+  width: 250px;
 }
