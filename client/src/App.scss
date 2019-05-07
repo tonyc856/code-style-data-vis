@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    margin: 25px;
+    margin: 0 50px;
   }
 
   .content-body {
@@ -30,6 +30,7 @@
   display: flex;
   align-items: center;
   width: 400px;
+  margin-bottom: 15px;
 
   #search-bar {
     font-size: 18px;
@@ -48,4 +49,8 @@
 
 #drawer-menu {
   width: 250px;
+}
+
+#about-page {
+  margin: 0 15%;
 }

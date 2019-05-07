@@ -62,7 +62,7 @@ export default class NavBar extends Component {
   render() {
     return (
       <>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <IconButton color="inherit" aria-label="Menu" onClick={ this.toggleDrawer }>
               <MenuIcon />

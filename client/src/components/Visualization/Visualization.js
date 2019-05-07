@@ -6,6 +6,8 @@ import Select from "react-select";
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { VictoryPie } from 'victory';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
 import AnalysisList from '../AnalysisList/AnalysisList';
 
@@ -163,7 +165,8 @@ export default class Visualization extends Component {
       <div className="visualization">
         <div className="content-body">
           <Paper className="search-bar-container" elevation={1}>
-            <Select id="search-bar"
+            <Select 
+              id="search-bar"
               value={ this.state.selectedRepository }
               options={ this.state.options }
               inputValue={ this.state.queryString }
@@ -171,13 +174,17 @@ export default class Visualization extends Component {
               onChange={ this.onRepositorySelect } 
               placeholder="alexjc/neural-doodle"
               menuIsOpen={ this.state.queryString }
+              autoFocus
             />
           </Paper>
           { this.state.selectedRepository ? (
             <>  
-              <h3>Repository:{' '}
-                <a href={ this.state.htmlURL }>{ this.state.repositoryFullName }</a>
-              </h3>
+              <Typography gutterBottom variant="h6" color="inherit">
+                Repository:{' '} 
+                <Link target="_blank" rel="noopener noreferrer" href={ this.state.htmlURL }>
+                  { this.state.repositoryFullName }
+                </Link>
+              </Typography>
               <Grid container justify="center" spacing={40}>
                 { this.state.repositoryAnalysis ? 
                   (<Grid item>
