@@ -12,7 +12,7 @@ const listItems = [
   {
     name: "Tabs vs. Space",
     property: "tabs_vs_spaces_analysis",
-    labels: ["Tabs", "Spaces"],
+    labels: ["Spaces", "Tabs"],
     parent: null
   },
   {
