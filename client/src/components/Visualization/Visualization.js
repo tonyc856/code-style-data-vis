@@ -160,59 +160,80 @@ export default class Visualization extends Component {
     this.getRepositoriesDebounced = debounce(500, this.getRepositories);
   };
 
+  renderSearchBar = () => {
+    return (
+      <Paper className="search-bar-container" elevation={1}>
+        <Select 
+          id="search-bar"
+          value={ this.state.selectedRepository }
+          options={ this.state.options }
+          inputValue={ this.state.queryString }
+          onInputChange={ this.handleSearch }
+          onChange={ this.onRepositorySelect } 
+          placeholder="alexjc/neural-doodle"
+          menuIsOpen={ this.state.queryString }
+          autoFocus
+        />
+      </Paper>
+    );
+  };
+
+  renderAnalysisList = () => {
+    return (
+      <Paper>
+        <AnalysisList 
+          summary={ this.state.summary } 
+          repositoryAnalysis={ this.state.repositoryAnalysis } 
+          onSelect={ this.onSelectAnalysis } />
+      </Paper>
+    );
+  };
+
   render() {
     return (
       <div className="visualization">
         <div className="content-body">
-          <Paper className="search-bar-container" elevation={1}>
-            <Select 
-              id="search-bar"
-              value={ this.state.selectedRepository }
-              options={ this.state.options }
-              inputValue={ this.state.queryString }
-              onInputChange={ this.handleSearch }
-              onChange={ this.onRepositorySelect } 
-              placeholder="alexjc/neural-doodle"
-              menuIsOpen={ this.state.queryString }
-              autoFocus
-            />
-          </Paper>
-          { this.state.selectedRepository ? (
-            <>  
+          <Grid container justify="center" direction="column"  alignContent="center" alignItems="center">
+            <Grid item>
+              { this.renderSearchBar() }
+            </Grid>
+            { this.state.selectedRepository ? (
+            <Grid item>
               <Typography gutterBottom variant="h6" color="inherit">
                 Repository:{' '} 
                 <Link target="_blank" rel="noopener noreferrer" href={ this.state.htmlURL }>
                   { this.state.repositoryFullName }
                 </Link>
               </Typography>
-              <Grid container justify="center" spacing={40}>
-                { this.state.repositoryAnalysis ? 
-                  (<Grid item>
-                    <Paper>
-                      <AnalysisList summary={ this.state.summary } repositoryAnalysis={ this.state.repositoryAnalysis } onSelect={ this.onSelectAnalysis } />
-                    </Paper>
-                  </Grid>) : null
-                }
-                <Grid item>
-                  <Grid container justify="center">
-                    <h3>{ this.state.title }</h3>
+            </Grid>) : null }
+            { this.state.selectedRepository ? (
+            <Grid item container justify="center" direction="row" alignContent="center">
+              { this.state.repositoryAnalysis ? ( <Grid item>{ this.renderAnalysisList() } </Grid>) : null }
+              <Grid item>
+                <Grid container justify="center" direction="column" alignItems="center">
+                  <Grid item>
+                    <Typography gutterBottom variant="h4" color="inherit">
+                      { this.state.title }
+                    </Typography>
                   </Grid>
-                  <div className="chart-container">
+                  <Grid item className="chart-container">
                     <VictoryPie 
                       data={ this.state.data }
                       colorScale="qualitative" />
-                  </div>
+                  </Grid>
+                  <Grid item>
+                    <Typography gutterBottom variant="body2" className="analysis-details">
+                      <u><b>Summary</b></u>
+                      <div>Language: { this.state.language }</div>
+                      <div>File Count: { this.state.fileCount } </div>
+                      <div>Analyzed File Count: {this.state.analyzedFileCount } </div>  
+                      <div>Total Repository Errors: {this.state.totalRepositoryErrors } </div>
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
-              <div className="analysis-details">
-                <u><b>Summary</b></u>
-                <div>Language: { this.state.language }</div>
-                <div>File Count: { this.state.fileCount } </div>
-                <div>Analyzed File Count: {this.state.analyzedFileCount } </div>  
-                <div>Total Repository Errors: {this.state.totalRepositoryErrors } </div>
-              </div>
-            </>) : null
-          }
+            </Grid>) : null }
+          </Grid>
         </div>
       </div>
     );
