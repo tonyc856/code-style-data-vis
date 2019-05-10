@@ -103,15 +103,19 @@ export default class Visualization extends Component {
 
   getSummary = () => {
     const summary = this.state.summary;
-    const totalCategoryRrrors = summary.total_category_errors;
+    const totalCategoryErrors = summary.total_category_errors;
     let data = [
-      {y: totalCategoryRrrors.naming, label: "Naming: " + totalCategoryRrrors.naming}, 
-      {y: totalCategoryRrrors.indentation, label: "Indentation: " + totalCategoryRrrors.indentation}, 
-      {y: totalCategoryRrrors.tabs_vs_spaces, label: "Tabs vs Spaces: " + totalCategoryRrrors.tabs_vs_spaces},
-      {y: totalCategoryRrrors.line_length, label: "Line Length: " + totalCategoryRrrors.line_length}, 
-      {y: totalCategoryRrrors.blank_lines, label: "Blank Lines: " + totalCategoryRrrors.blank_lines}, 
-      {y: totalCategoryRrrors.import, label: "Import: " + totalCategoryRrrors.import}
+      {y: totalCategoryErrors.naming, label: "Naming: " + totalCategoryErrors.naming}, 
+      {y: totalCategoryErrors.indentation, label: "Indentation: " + totalCategoryErrors.indentation}, 
+      {y: totalCategoryErrors.tabs_vs_spaces, label: "Tabs vs Spaces: " + totalCategoryErrors.tabs_vs_spaces},
+      {y: totalCategoryErrors.line_length, label: "Line Length: " + totalCategoryErrors.line_length}, 
+      {y: totalCategoryErrors.blank_lines, label: "Blank Lines: " + totalCategoryErrors.blank_lines}, 
+      {y: totalCategoryErrors.import, label: "Import: " + totalCategoryErrors.import}
     ];
+    data = data.filter(dataPoint => {
+      const value = dataPoint.y;
+      return value > 0;
+    });
     return data;
   };
 
@@ -128,7 +132,7 @@ export default class Visualization extends Component {
         if (item.parent) {
           analysis = analysis[item.parent];
         }
-        if (analysis[property].pep && analysis[property].google) {
+        if (analysis[property].pep) {
           result1++;
         } else {  
           result2++;
@@ -182,7 +186,8 @@ export default class Visualization extends Component {
     return (
       <Paper>
         <AnalysisList 
-          summary={ this.state.summary } 
+          summary={ this.state.summary }
+          selected={ this.state.selectedAnalysis }
           repositoryAnalysis={ this.state.repositoryAnalysis } 
           onSelect={ this.onSelectAnalysis } />
       </Paper>
@@ -197,7 +202,7 @@ export default class Visualization extends Component {
             <Grid item>
               { this.renderSearchBar() }
             </Grid>
-            { this.state.selectedRepository ? (
+            { this.state.selectedRepository ? 
             <Grid item>
               <Typography gutterBottom variant="h6" color="inherit">
                 Repository:{' '} 
@@ -205,34 +210,36 @@ export default class Visualization extends Component {
                   { this.state.repositoryFullName }
                 </Link>
               </Typography>
-            </Grid>) : null }
-            { this.state.selectedRepository ? (
-            <Grid item container justify="center" direction="row" alignContent="center">
-              { this.state.repositoryAnalysis ? ( <Grid item>{ this.renderAnalysisList() } </Grid>) : null }
-              <Grid item>
-                <Grid container justify="center" direction="column" alignItems="center">
-                  <Grid item>
-                    <Typography gutterBottom variant="h4" color="inherit">
-                      { this.state.title }
-                    </Typography>
-                  </Grid>
-                  <Grid item className="chart-container">
-                    <VictoryPie 
-                      data={ this.state.data }
-                      colorScale="qualitative" />
-                  </Grid>
-                  <Grid item>
-                    <Typography gutterBottom variant="body2" className="analysis-details">
-                      <u><b>Summary</b></u>
-                      <div>Language: { this.state.language }</div>
-                      <div>File Count: { this.state.fileCount } </div>
-                      <div>Analyzed File Count: {this.state.analyzedFileCount } </div>  
-                      <div>Total Repository Errors: {this.state.totalRepositoryErrors } </div>
-                    </Typography>
+            </Grid> : null }
+            { this.state.selectedRepository ?
+            <>
+              <Grid item container justify="center" direction="row" alignItems="center" alignContent="center">
+                { this.state.repositoryAnalysis ? ( <Grid item>{ this.renderAnalysisList() } </Grid>) : null }
+                <Grid item>
+                  <Grid container justify="center" direction="column" alignItems="center">
+                    <Grid item>
+                      <Typography gutterBottom variant="h4" color="inherit">
+                        { this.state.title }
+                      </Typography>
+                    </Grid>
+                    <Grid item className="chart-container">
+                      <VictoryPie 
+                        data={ this.state.data }
+                        colorScale="qualitative" />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>) : null }
+              <Grid item>
+                <Typography gutterBottom variant="body2" className="analysis-details">
+                  <u><b>Summary</b></u> <br /> 
+                  Language: { this.state.language } <br /> 
+                  Total Files: { this.state.fileCount } <br /> 
+                  Total Files Analyzed: {this.state.analyzedFileCount } <br /> 
+                  Total Repository Errors: {this.state.totalRepositoryErrors } <br /> 
+                </Typography>
+              </Grid>
+            </> : null }
           </Grid>
         </div>
       </div>
