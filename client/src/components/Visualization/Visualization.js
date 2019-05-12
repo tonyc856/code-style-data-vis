@@ -5,11 +5,11 @@ import { debounce } from "throttle-debounce";
 import Select from "react-select";
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { VictoryPie } from 'victory';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
 import AnalysisList from '../AnalysisList/AnalysisList';
+import Chart from '../Visualization/Chart';
 
 export default class Visualization extends Component {
   state = {
@@ -103,19 +103,23 @@ export default class Visualization extends Component {
 
   getSummary = () => {
     const summary = this.state.summary;
-    const totalCategoryErrors = summary.total_category_errors;
-    let data = [
-      {y: totalCategoryErrors.naming, label: "Naming: " + totalCategoryErrors.naming}, 
-      {y: totalCategoryErrors.indentation, label: "Indentation: " + totalCategoryErrors.indentation}, 
-      {y: totalCategoryErrors.tabs_vs_spaces, label: "Tabs vs Spaces: " + totalCategoryErrors.tabs_vs_spaces},
-      {y: totalCategoryErrors.line_length, label: "Line Length: " + totalCategoryErrors.line_length}, 
-      {y: totalCategoryErrors.blank_lines, label: "Blank Lines: " + totalCategoryErrors.blank_lines}, 
-      {y: totalCategoryErrors.import, label: "Import: " + totalCategoryErrors.import}
-    ];
-    data = data.filter(dataPoint => {
-      const value = dataPoint.y;
-      return value > 0;
-    });
+    let data = [];
+
+    if (summary) {
+      const totalCategoryErrors = summary.total_category_errors;
+      data = [
+        {y: totalCategoryErrors.naming, label: "Naming: " + totalCategoryErrors.naming}, 
+        {y: totalCategoryErrors.indentation, label: "Indentation: " + totalCategoryErrors.indentation}, 
+        {y: totalCategoryErrors.tabs_vs_spaces, label: "Tabs vs Spaces: " + totalCategoryErrors.tabs_vs_spaces},
+        {y: totalCategoryErrors.line_length, label: "Line Length: " + totalCategoryErrors.line_length}, 
+        {y: totalCategoryErrors.blank_lines, label: "Blank Lines: " + totalCategoryErrors.blank_lines}, 
+        {y: totalCategoryErrors.import, label: "Import: " + totalCategoryErrors.import}
+      ];
+      data = data.filter(dataPoint => {
+        const value = dataPoint.y;
+        return value > 0;
+      });
+    }
     return data;
   };
 
@@ -222,10 +226,11 @@ export default class Visualization extends Component {
                         { this.state.title }
                       </Typography>
                     </Grid>
-                    <Grid item className="chart-container">
-                      <VictoryPie 
+                    <Grid item container justify="center" alignItems="center" alignContent="center" className="chart-container">
+                      <Chart
                         data={ this.state.data }
-                        colorScale="qualitative" />
+                        summary={ this.state.summary }
+                        selectedAnalysis={ this.state.selectedAnalysis }/>
                     </Grid>
                   </Grid>
                 </Grid>

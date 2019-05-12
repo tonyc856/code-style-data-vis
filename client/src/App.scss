@@ -19,7 +19,8 @@
 
 .chart-container {
   height: 400px;
-  width: 600px;
+  min-width: 600px;
+  width: 100%;
 }
 
 .analysis-details {
@@ -53,4 +54,11 @@
 
 #about-page {
   margin: 0 15%;
+}
+
+#chart {
+  .compliant-check {
+    font-size: 250px;
+    color: limegreen;
+  }
 }
