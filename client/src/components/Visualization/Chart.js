@@ -47,6 +47,8 @@ export default class Chart extends Component {
         : 
         <VictoryPie
           data={ this.props.data }
+          height={ 400 }
+          width={ 700 }
           colorScale="qualitative" /> 
         }
       </div>
