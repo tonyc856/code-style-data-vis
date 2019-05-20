@@ -35,20 +35,44 @@ export const listItems = [
     summaryProperty: "blank_lines",
     labels: ["Files Passed", "Files Failed"],
     codeExample: {
-      correct: 'spam(ham[1], {eggs: 2})\n' +
-        '    if x == 4: print x, y; x, y = y, x\n' +
-        '    spam(1)\n' +
-        "    dict['key'] = list[index]\n" +
-        '    x = 1\n' +
-        '    y = 2\n' +
-        '    long_variable = 3',
-      incorrect: 'spam( ham[ 1 ], { eggs: 2 })\n' +
-        '    if x == 4 : print x, y ; x , y = y , x\n' +
-        '    spam (1) \n' +
-        "    dict ['key'] = list [index]\n" +
-        '    x             = 1\n' +
-        '    y             = 2\n' +
-        '    long_variable = 3'
+      correct: 'import sys\n' + 
+      '\n' +
+      'import requests\n' +
+      'import scrapy\n' +
+      '\n' +
+      'from flask import Flask\n' +
+      'from my_local_module import MyClass\n' +
+      '\n\n' +
+      'def top_level_function1():\n' +
+      '    pass\n' +
+      '\n\n' +
+      'def top_level_function2():\n' +
+      '    pass\n' +
+      '\n\n' + 
+      'class FooBar(object):\n' +
+      '\n' +
+      '    def class_method1():\n' +
+      '        pass\n' +
+      '\n' +
+      '    def class_method2():\n' +
+      '        pass',
+      incorrect: 'import sys\n' +
+      'import requests\n' +
+      'import scrapy\n' +
+      'from flask import Flask\n' +
+      'from my_local_module import MyClass\n' +
+      '\n' +
+      'def top_level_function1():\n' +
+      '    pass\n' +
+      '\n' +
+      'def top_level_function2():\n' +
+      '    pass\n' +
+      '\n' + 
+      'class FooBar(object):\n' +
+      '    def class_method1():\n' +
+      '        pass\n' +
+      '    def class_method2():\n' +
+      '        pass'
     },
     parent: null
   },
