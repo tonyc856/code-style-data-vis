@@ -17,10 +17,20 @@
   }
 }
 
+.visualization {
+  .code-example {
+    font-size: 12px;
+  }
+}
+
 .chart-container {
   height: 400px;
   min-width: 700px;
   width: 100%;
+}
+
+#anaylsis-list {
+  margin: 25px 0;
 }
 
 .analysis-details {
@@ -61,4 +71,10 @@
     font-size: 250px;
     color: limegreen;
   }
+}
+
+#code-style-examples {
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-bottom: 25px;
 }

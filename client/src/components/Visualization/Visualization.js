@@ -10,6 +10,8 @@ import Link from '@material-ui/core/Link';
 
 import AnalysisList from '../AnalysisList/AnalysisList';
 import Chart from '../Visualization/Chart';
+import CodeStyleExamples from './CodeStyleExamples';
+import { summaryItem } from '../AnalysisList/AnalysisItems';
 
 export default class Visualization extends Component {
   state = {
@@ -26,9 +28,7 @@ export default class Visualization extends Component {
     queryString: "", // search string for the autocomplete search box
     selectedRepository: null, // option selected from the autocomplete search box
     options: [], // list of repositories found
-    selectedAnalysis: {
-      name: "Summary"
-    }
+    selectedAnalysis: summaryItem
   };
 
   getRepositories(fullName) {
@@ -188,8 +188,8 @@ export default class Visualization extends Component {
 
   renderAnalysisList = () => {
     return (
-      <Paper>
-        <AnalysisList 
+      <Paper id="anaylsis-list">
+        <AnalysisList
           summary={ this.state.summary }
           selected={ this.state.selectedAnalysis }
           repositoryAnalysis={ this.state.repositoryAnalysis } 
@@ -217,7 +217,7 @@ export default class Visualization extends Component {
             </Grid> : null }
             { this.state.selectedRepository ?
             <>
-              <Grid item container justify="center" direction="row" alignItems="center" alignContent="center">
+              <Grid item container justify="center" direction="row">
                 { this.state.repositoryAnalysis ? ( <Grid item>{ this.renderAnalysisList() } </Grid>) : null }
                 <Grid item>
                   <Grid container justify="center" direction="column" alignItems="center">
@@ -232,6 +232,10 @@ export default class Visualization extends Component {
                         summary={ this.state.summary }
                         selectedAnalysis={ this.state.selectedAnalysis }/>
                     </Grid>
+                    { this.state.selectedAnalysis.codeExample ? 
+                    <CodeStyleExamples 
+                      language={ this.state.language }
+                      selectedAnalysis={ this.state.selectedAnalysis } /> : null}
                   </Grid>
                 </Grid>
               </Grid>
