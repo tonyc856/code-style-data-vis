@@ -30,6 +30,6 @@ Go to the project's root directory and create a file named ".env" with key/value
 `npm run client-install` - *installs the client's dependencies*\
 `npm run heroku-postbuild` - *for Heroku to use for deployment purposes only*
 
-***If developing on the frontend side only, run `npm run client` and `npm run server`.\
+***If developing on the frontend side only, run `npm run client` and `npm start`.\
 nodemon restarts the server each time changes are made.***
 
