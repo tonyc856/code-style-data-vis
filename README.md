@@ -18,6 +18,7 @@ run `npm run client-install`
 Go to the project's root directory and create a file named ".env" with key/value pairs\
 `MONGO_DB_URL=`\
 `MONGO_DB_NAME=`\
+`MONGO_DB_COLLECTION=`\
 `MONGO_DB_USERNAME=`\
 `MONGO_DB_PW=`
 
