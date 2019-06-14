@@ -34,3 +34,4 @@ Go to the project's root directory and create a file named ".env" with key/value
 ***If developing on the frontend side only, run `npm run client` and `npm start`.\
 nodemon restarts the server each time changes are made.***
 
+API endpoint location: localhost:3001/api/
