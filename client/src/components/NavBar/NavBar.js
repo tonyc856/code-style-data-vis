@@ -11,12 +11,17 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Assessment, Info } from '@material-ui/icons';
+import { Assessment, Dashboard, Info } from '@material-ui/icons';
 
 const routes = [
   {
-    name: "Code Style Visualization", 
+    name: "Home", 
     path: "/", 
+    icon: <Dashboard />
+  },
+  {
+    name: "Code Style Visualization", 
+    path: "/visualization", 
     icon: <Assessment />
   },
   {

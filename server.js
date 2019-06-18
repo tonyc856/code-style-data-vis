@@ -31,9 +31,9 @@ mongoose.connect(
     useNewUrlParser: true }
 );
 
-let connection = mongoose.connection;
+let db = mongoose.connection;
 
-connection.once("open", function() { 
+db.once("open", function() { 
   console.log("connected to the database");
   /* mongoose.connection.db.listCollections().toArray(function (err, names) {
     console.log(names); // [{ name: 'dbname.myCollection' }]
@@ -42,7 +42,7 @@ connection.once("open", function() {
 });
 
 // checks if connection with the database is successful
-connection.on("error", console.error.bind(console, "MongoDB connection error:"));
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // (optional) only made for logging and
 // bodyParser, parses the request body to be a readable json format
@@ -60,14 +60,14 @@ router.get("/repositories", (req, res) => {
   const fullName = req.query.fullName;
   if (fullName) {
     Data.find({full_name: {$regex: fullName, $options: "$i"}}, function (err, result) {
-      let data = result.map(repository => {
-        let rObj = {};
-        rObj['label'] = repository.full_name;
-        rObj['value'] = repository.full_name;
-        return rObj;
+      const dataset = result.map(repository => {
+        let data = {};
+        data['label'] = repository.full_name;
+        data['value'] = repository.full_name;
+        return data;
       });
       if (err) return res.json({ success: false, error: err });
-      return res.json({ success: true, data: data });
+      return res.json({ success: true, data: dataset });
     }).limit(10);
   } else {
     return res.json({ success: true, data: [] });
@@ -81,6 +81,47 @@ router.get("/repositories/get_analysis", (req, res) => {
     return res.json({ success: true, data: result });
   });
 });
+
+router.get("/stats", async (req, res) => {
+  try {
+    const totalRepositories = await getTotalRepositories(null);
+    const totalNoErrorRepositories = await getTotalRepositories({'summary.total_repo_errors': 0});
+    const totalFilesAnalyzed = await getTotalByField("$summary.analyzed_file_count");
+    const totalErrors = await getTotalByField("$summary.total_repo_errors");
+    const averageErrorsPerFile = totalErrors/totalFilesAnalyzed;
+    const averageErrorsPerRepository = totalErrors/totalRepositories;
+    const data = {
+      totalRepositories: totalRepositories,
+      totalNoErrorRepositories: totalNoErrorRepositories,
+      totalFilesAnalyzed: totalFilesAnalyzed,
+      totalErrors: totalErrors,
+      averageErrorsPerRepository: Math.round(averageErrorsPerRepository),
+      averageErrorsPerFile: Math.round(averageErrorsPerFile)
+    };
+    return res.json({ success: true, data: data });
+  } catch (err) {
+    return res.json({ success: false, error: err });
+  }
+});
+
+getTotalRepositories = async (condition) => {
+  let result = await Data.countDocuments(condition, function(err , count) {
+    return count;
+  });
+  return result;
+};
+
+getTotalByField = async (field) => {
+  const pipeline = [{
+    $group: { 
+      _id: null, 
+      total: { $sum: field }
+    }
+  }];
+  let data = await Data.aggregate(pipeline);
+  const total = data[0].total;
+  return total;
+};
 
 // append /api for our http requests
 app.use("/api", router);

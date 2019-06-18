@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Visualization from './components/Visualization/Visualization';
 import About from './components/About';
 import NavBar from './components/NavBar/NavBar';
+import Home from './components/Home/Home';
 import './App.scss';
 
 const styles = (theme) => ({
@@ -24,7 +25,8 @@ class App extends Component {
           <Paper>
             <div className={classes.toolbar} />
             <div className="App-body">
-              <Route path="/" exact component={Visualization} />
+              <Route path="/" exact component={Home} />
+              <Route path="/visualization" exact component={Visualization} />
               <Route path="/about" component={About} />
             </div>
           </Paper>

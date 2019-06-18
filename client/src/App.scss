@@ -9,6 +9,10 @@
     padding: 50px;
   }
 
+  .App-body {
+    background-color: #eeeeee;
+  }
+
   .content-body {
     display: flex;
     flex-direction: column;
@@ -46,6 +50,10 @@
   #search-bar {
     font-size: 18px;
     width: 100%;
+
+    .css-1hwfws3 {
+      cursor: text;
+    }
   }
 
   .input {
@@ -81,8 +89,15 @@
 
 .icon {
   margin-right: 10px;
+  margin-bottom: 3px;
 }
 
 .valid-color {
   color: green;
+}
+
+#stats {
+  .grid-item {
+    margin: 20px;
+  }
 }

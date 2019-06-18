@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import { Search } from '@material-ui/icons';
 
 import AnalysisList from '../AnalysisList/AnalysisList';
 import Chart from '../Visualization/Chart';
@@ -170,19 +171,26 @@ export default class Visualization extends Component {
 
   renderSearchBar = () => {
     return (
-      <Paper className="search-bar-container" elevation={1}>
-        <Select 
-          id="search-bar"
-          value={ this.state.selectedRepository }
-          options={ this.state.options }
-          inputValue={ this.state.queryString }
-          onInputChange={ this.handleSearch }
-          onChange={ this.onRepositorySelect } 
-          placeholder="alexjc/neural-doodle"
-          menuIsOpen={ this.state.queryString }
-          autoFocus
-        />
-      </Paper>
+      <Grid container justify="center" alignItems="center" alignContent="center">
+        <Grid item>
+          <Search className="icon" fontSize="large" />
+        </Grid>
+        <Grid item>
+          <Paper className="search-bar-container" elevation={1}>
+            <Select 
+              id="search-bar"
+              value={ this.state.selectedRepository }
+              options={ this.state.options }
+              inputValue={ this.state.queryString }
+              onInputChange={ this.handleSearch }
+              onChange={ this.onRepositorySelect } 
+              placeholder="alexjc/neural-doodle"
+              menuIsOpen={ this.state.queryString }
+              autoFocus
+            />
+          </Paper>
+        </Grid>
+      </Grid>
     );
   };
 
