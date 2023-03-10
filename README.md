@@ -36,6 +36,7 @@ nodemon restarts the server each time changes are made.***
 
 API endpoint location: localhost:3001/api/
 
+## Screenshots
 ![Screen Shot 2022-10-27 at 10 33 22 PM](https://user-images.githubusercontent.com/21371772/224438695-c376832c-a217-4cf6-ab9e-24d05c9129b0.png)
 ![Screen Shot 2022-10-27 at 10 33 26 PM](https://user-images.githubusercontent.com/21371772/224438941-5e6cafcb-57ad-466d-ac49-32c5e9331c8e.png)
 ![Screen Shot 2022-10-27 at 10 33 32 PM](https://user-images.githubusercontent.com/21371772/224439063-a2108df3-5657-4f8e-adf4-7a8eb11de3fa.png)
